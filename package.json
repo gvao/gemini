@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.15.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "typescript": "^5.5.4"
   },
   "keywords": [],
   "author": "",
