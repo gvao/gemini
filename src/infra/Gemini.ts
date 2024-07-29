@@ -3,12 +3,10 @@ config()
 import { GenerativeModel, GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from "@google/generative-ai"
 
 export default class Gemini {
-    /** @type {GenerativeModel} */
-    generativeModel
+    private generativeModel: GenerativeModel
 
-    constructor() {
-        const apiKey = process.env.GOOGLE_GEMINI_API_KEY
-        const genAi = new GoogleGenerativeAI(apiKey)
+    constructor(apiKey = process.env.GOOGLE_GEMINI_API_KEY) {
+        const genAi = new GoogleGenerativeAI(apiKey!)
         const safetySettings = [
             {
                 category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
@@ -27,11 +25,21 @@ export default class Gemini {
             //     threshold: HarmBlockThreshold.BLOCK_NONE,
             // },
         ]
+        const generationConfig = {
+            // stopSequences: ["red"],
+            maxOutputTokens: 500,
+            // temperature: 0.9,
+            // topP: 0.1,
+            // topK: 16,
+        };
         const model = "gemini-1.5-flash"
-        this.generativeModel = genAi.getGenerativeModel({ model, safetySettings })
+        this.generativeModel = genAi.getGenerativeModel({ model, safetySettings,  })
 
     }
 
-    generateContent = (content) => this.generativeModel.generateContent(content)
+    async generateContent(content: string) {
+        const { response } = await this.generativeModel.generateContent(content)
+        return response.text()
+    }
 
 }
